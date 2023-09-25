@@ -1,0 +1,15 @@
+if TARGET_IMX28WINKHUB
+
+config SYS_BOARD
+	default "imx28-wink-hub"
+
+config SYS_VENDOR
+	default "wink"
+
+config SYS_SOC
+	default "mxs"
+
+config SYS_CONFIG_NAME
+	default "imx28-wink-hub"
+
+endif

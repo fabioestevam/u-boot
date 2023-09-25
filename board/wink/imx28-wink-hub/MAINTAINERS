@@ -1,0 +1,7 @@
+IMX28-WINK-HUB BOARD
+M:	Fabio Estevam <festevam@gmail.com>
+S:	Maintained
+F:	board/wink/imx28-wink/
+F:	arch/arm/dts/imx28-wink-hub-v1.dts
+F:	include/configs/imx28-wink-hub.h
+F:	configs/imx28-wink-hub_defconfig

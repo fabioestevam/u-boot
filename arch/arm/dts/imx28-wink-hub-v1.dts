@@ -1,0 +1,206 @@
+// SPDX-License-Identifier: GPL-2.0+
+// Copyright (C) 2023 Fabio Estevam <festevam@gmail.com>
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include "imx28.dtsi"
+/ {
+	model = "i.MX28 Wink Hub v1";
+	compatible = "wink,imx28-wink-hub-v1", "fsl,imx28";
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x40000000 0>; /* will be filled in by U-Boot */
+	};
+
+	reg_wifi: regulator-wifi {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_enable>;
+		regulator-name = "wifi";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	pwmleds {
+		compatible = "pwm-leds";
+
+		led-red {
+			label = "red";
+			max-brightness = <255>;
+			pwms = <&pwm 0 500000>;
+		};
+
+		led-green {
+			label = "green";
+			max-brightness = <255>;
+			pwms = <&pwm 1 500000>;
+		};
+
+		led-blue {
+			label = "blue";
+			max-brightness = <255>;
+			pwms = <&pwm 3 500000>;
+		};
+	};
+};
+
+&auart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&auart0_pins_a>;
+	uart-has-rtscts;
+	status = "okay";
+};
+
+&auart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&auart1_2pins_a>;
+	status = "okay";
+};
+
+&auart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&auart2_2pins_a>;
+	status = "okay";
+};
+
+&auart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&auart3_2pins_a>;
+	status = "okay";
+};
+
+&auart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&auart4_pins_a>;
+	uart-has-rtscts;
+	status = "okay";
+};
+
+&duart {
+	pinctrl-names = "default";
+	pinctrl-0 = <&duart_pins_c>;
+	status = "okay";
+};
+
+&gpmi {
+	pinctrl-names = "default";
+	pinctrl-0 = <&gpmi_pins_a &gpmi_pins_extra>;
+	status = "okay";
+
+	partition@0 {
+		label = "gpmi-nfc-0-boot";
+		reg = <0x0000000 0x300000>;
+		read-only;
+        };
+
+	partition@300000 {
+		label = "updater-kernel";
+		reg = <0x0300000 0x400000>;
+	};
+
+	partition@700000 {
+		label = "updater-rootfs";
+		reg = <0x0700000 0x1c00000>;
+        };
+
+	partition@2300000 {
+		label = "database";
+		reg = <0x2300000 0x0800000>;
+	};
+
+	partition@2b00000 {
+		label = "app-kernel";
+		reg = <0x2b00000 0x0800000>;
+        };
+
+	partition@3300000 {
+		label = "gpmi-nfc-general-use";
+		reg = <0x3300000 0x4d00000>;
+        };
+};
+
+&pwm {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pwm0_pins_a &pwm1_pins_a &pwm3_pins_a>;
+	status = "okay";
+};
+
+&ssp0 {
+	compatible = "fsl,imx28-mmc";
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc0_4bit_pins_a &mmc0_sck_cfg>;
+	vmmc-supply = <&reg_wifi>;
+	bus-width = <4>;
+	status = "okay";
+};
+
+&ssp3 {
+	compatible = "fsl,imx28-spi";
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi3_pins_b>;
+	status = "okay";
+
+	spidev@0 {
+		/* Generic compatible to make spidev happy */
+		compatible = "rohm,dh2228fv";
+		reg = <0>;
+		spi-max-frequency = <24000000>;
+	};
+};
+
+&usb0 {
+	dr_mode = "peripheral";
+	status = "okay";
+};
+
+&usbphy0  {
+	status = "okay";
+};
+
+&pinctrl {
+	pinctrl-names = "default";
+	pinctrl-0 = <&hog_pins_a>;
+
+	hog_pins_a: hog@0 {
+		reg = <0>;
+		fsl,pinmux-ids = <
+			MX28_PAD_LCD_D07__GPIO_1_7 /*  Z-Wave reset connection high output */
+			MX28_PAD_LCD_D08__GPIO_1_8 /* Lutron Clear-Connect button  */
+			MX28_PAD_LCD_D09__GPIO_1_9 /*  Zigbee reset */
+			MX28_PAD_LCD_D10__GPIO_1_10 /* Lutron reset */
+			MX28_PAD_LCD_D12__GPIO_1_12 /* Input Zigbee interrupt */
+			MX28_PAD_LCD_D14__GPIO_1_14 /*  BT  power down */
+			MX28_PAD_LCD_D15__GPIO_1_15 /* Kidde Reset */ 
+			MX28_PAD_LCD_D16__GPIO_1_16 /* Kidde Data */
+			MX28_PAD_LCD_D19__GPIO_1_19 /* Kidde RF Clock */
+			MX28_PAD_LCD_D20__GPIO_1_20 /* Kidde GPIO */
+		>;
+		fsl,drive-strength = <MXS_DRIVE_4mA>;
+		fsl,voltage = <MXS_VOLTAGE_HIGH>;
+		fsl,pull-up = <MXS_PULL_DISABLE>;
+	};
+
+	gpmi_pins_extra: gpmi-pins-extra@0 {
+		reg = <0>;
+		fsl,pinmux-ids = <
+			MX28_PAD_GPMI_CE1N__GPMI_CE1N
+			MX28_PAD_GPMI_RDY1__GPMI_READY1
+		>;
+		fsl,drive-strength = <MXS_DRIVE_4mA>;
+		fsl,voltage = <MXS_VOLTAGE_HIGH>;
+		fsl,pull-up = <MXS_PULL_DISABLE>;
+	};
+
+	wifi_enable: wifi-enable@1 {
+		reg = <1>;
+		fsl,pinmux-ids = <
+			MX28_PAD_LCD_D13__GPIO_1_13
+		>;
+		fsl,drive-strength = <MXS_DRIVE_4mA>;
+		fsl,voltage = <MXS_VOLTAGE_HIGH>;
+		fsl,pull-up = <MXS_PULL_DISABLE>;
+	};
+};

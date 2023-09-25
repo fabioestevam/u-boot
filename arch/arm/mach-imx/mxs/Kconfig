@@ -50,6 +50,11 @@ config TARGET_XEA
 	bool "Support XEA"
 	select PL01X_SERIAL
 
+config TARGET_IMX28WINKHUB
+	bool "Support imx28-wink-hub"
+	select PL01X_SERIAL
+	select BOARD_EARLY_INIT_F
+
 endchoice
 
 config SYS_SOC
@@ -76,5 +81,6 @@ config SPL_MXS_PMU_ENABLE_4P2_LINEAR_REGULATOR
 
 source "board/freescale/mx28evk/Kconfig"
 source "board/liebherr/xea/Kconfig"
+source "board/wink/imx28-wink-hub/Kconfig"
 
 endif
