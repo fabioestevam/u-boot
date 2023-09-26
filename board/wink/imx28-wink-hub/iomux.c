@@ -14,6 +14,9 @@ const iomux_cfg_t iomux_setup[] = {
 	/* DUART */
 	MX28_PAD_I2C0_SCL__DUART_RX,
 	MX28_PAD_I2C0_SDA__DUART_TX,
+	/* BootROM directs console to PWM0/1 pins. Disable them */
+	MX28_PAD_PWM0__GPIO_3_16,
+	MX28_PAD_PWM1__GPIO_3_17,
 	/* GPMI NAND */
 	MX28_PAD_GPMI_D00__GPMI_D0 | MUX_CONFIG_GPMI,
 	MX28_PAD_GPMI_D01__GPMI_D1 | MUX_CONFIG_GPMI,
