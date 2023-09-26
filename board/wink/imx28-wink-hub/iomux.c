@@ -7,13 +7,14 @@
 #include <asm/arch/imx-regs.h>
 #include <asm/arch/sys_proto.h>
 
+#define	MUX_CONFIG_DUART (MXS_PAD_3V3 | MXS_PAD_8MA | MXS_PAD_NOPULL)
 #define	MUX_CONFIG_GPMI	(MXS_PAD_3V3 | MXS_PAD_4MA | MXS_PAD_NOPULL)
 #define	MUX_CONFIG_EMI	(MXS_PAD_3V3 | MXS_PAD_12MA | MXS_PAD_NOPULL)
 
 const iomux_cfg_t iomux_setup[] = {
 	/* DUART */
-	MX28_PAD_I2C0_SCL__DUART_RX,
-	MX28_PAD_I2C0_SDA__DUART_TX,
+	MX28_PAD_I2C0_SCL__DUART_RX | MUX_CONFIG_DUART,
+	MX28_PAD_I2C0_SDA__DUART_TX | MUX_CONFIG_DUART,
 	/* BootROM directs console to PWM0/1 pins. Disable them */
 	MX28_PAD_PWM0__GPIO_3_16,
 	MX28_PAD_PWM1__GPIO_3_17,
