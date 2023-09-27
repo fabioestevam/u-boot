@@ -140,7 +140,7 @@ static int ehci_usb_ofdata_to_platdata(struct udevice *dev)
 	const char *mode;
 	int ret;
 
-	mode = ofnode_read_string(dev->node_, "dr_mode");
+	mode = ofnode_read_string(dev_ofnode(dev), "dr_mode");
 	if (mode) {
 		if (strcmp(mode, "peripheral") == 0)
 			plat->init_type = USB_INIT_DEVICE;
@@ -151,12 +151,12 @@ static int ehci_usb_ofdata_to_platdata(struct udevice *dev)
 	}
 
 	/* Read base address of the USB IP block */
-	ret = ofnode_read_u32(dev->node_, "reg", &port->usb_regs);
+	ret = ofnode_read_u32(dev_ofnode(dev), "reg", &port->usb_regs);
 	if (ret)
 		return ret;
 
 	/* Read base address of the USB PHY IP block */
-	ret = ofnode_read_u32(dev->node_, "fsl,usbphy", &phandle);
+	ret = ofnode_read_u32(dev_ofnode(dev), "fsl,usbphy", &phandle);
 	if (ret)
 		return ret;
 
