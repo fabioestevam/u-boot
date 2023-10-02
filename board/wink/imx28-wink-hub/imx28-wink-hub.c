@@ -37,5 +37,11 @@ int board_init(void)
 	/* Adress of boot parameters */
 	gd->bd->bi_boot_params = PHYS_SDRAM_1 + 0x100;
 
+	/* Set the Wifi control pins to default values */
+	gpio_direction_output(MX28_PAD_LCD_D23__GPIO_1_23, 1);
+	gpio_direction_output(MX28_PAD_LCD_D13__GPIO_1_13, 1);
+	gpio_direction_output(MX28_PAD_LCD_D18__GPIO_1_18, 1);
+	gpio_direction_output(MX28_PAD_SSP0_DETECT__GPIO_2_9, 0);
+
 	return 0;
 }
