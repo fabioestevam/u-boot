@@ -1,0 +1,115 @@
+/*
+ * (C) Copyright 2024 Rockchip Electronics Co., Ltd
+ *
+ * SPDX-License-Identifier:     GPL-2.0+
+ */
+
+#include "rockchip-u-boot.dtsi"
+
+ / {
+	aliases {
+		mmc1 = &sdmmc0;
+		mmc0 = &emmc;
+	};
+
+	chosen {
+		stdout-path = &uart0;
+		u-boot,spl-boot-order = &sdmmc0, &spi_nand, &spi_nor, &emmc;
+	};
+
+	secure-otp@20790000 {
+		compatible = "rockchip,rv1103b-secure-otp";
+		reg = <0x20790000 0x10000>;
+		secure_conf = <0x20250018>;
+		cru_rst_addr = <0x20000a20>;
+		mask_addr = <0x209d0000>;
+		bootph-all;
+		status = "okay";
+	};
+};
+
+&emmc {
+	bootph-some-ram;
+	status = "okay";
+};
+
+&cru {
+	bootph-all;
+	status = "okay";
+};
+
+&grf {
+	bootph-all;
+	status = "okay";
+};
+
+&pinctrl {
+	bootph-all;
+	status = "okay";
+};
+
+&sdmmc0 {
+	bootph-some-ram;
+	status = "okay";
+};
+
+&ioc {
+	bootph-all;
+	status = "okay";
+};
+
+&gpio0 {
+	bootph-pre-ram;
+	status = "okay";
+};
+
+&gpio1 {
+	bootph-pre-ram;
+	status = "okay";
+};
+
+&gpio2 {
+	bootph-pre-ram;
+	status = "okay";
+};
+
+&sfc {
+	bootph-all;
+	status = "okay";
+
+	#address-cells = <1>;
+	#size-cells = <0>;
+	spi_nand: flash@0 {
+		bootph-all;
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <4>;
+		spi-max-frequency = <80000000>;
+	};
+
+	spi_nor: flash@1 {
+		bootph-all;
+		compatible = "jedec,spi-nor";
+		label = "sfc_nor";
+		reg = <0>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <4>;
+		spi-max-frequency = <80000000>;
+	};
+};
+
+&uart0 {
+	bootph-pre-ram;
+	status = "okay";
+};
+
+&u2phy {
+	bootph-pre-ram;
+	status = "okay";
+};
+
+&u2phy_otg {
+	bootph-pre-ram;
+	status = "okay";
+};

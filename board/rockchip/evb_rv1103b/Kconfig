@@ -1,0 +1,12 @@
+if TARGET_EVB_RV1103B
+
+config SYS_BOARD
+	default "evb_rv1103b"
+
+config SYS_VENDOR
+	default "rockchip"
+
+config SYS_CONFIG_NAME
+	default "evb_rv1103b"
+
+endif

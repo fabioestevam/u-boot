@@ -1,0 +1,26 @@
+if ROCKCHIP_RV1103
+
+choice
+	prompt "RV1103 board select"
+
+config TARGET_EVB_RV1103B
+	bool "EVB_RV1103B"
+	help
+	  RV1103B EVB is a evaluation board for Rockchip RV1103B.
+
+endchoice
+
+config ROCKCHIP_BOOT_MODE_REG
+	default 0x20160200
+
+config ROCKCHIP_STIMER_BASE
+	default 0x20500000
+
+config SYS_SOC
+	default "rv1103"
+
+config SYS_MALLOC_F_LEN
+	default 0x400
+
+source "board/rockchip/evb_rv1103b/Kconfig"
+endif
