@@ -1,0 +1,33 @@
+/* SPDX-License-Identifier: GPL-2.0+ */
+/*
+ * (C) Copyright 2016 Rockchip Electronics Co., Ltd
+ */
+#ifndef __CONFIG_RV1103_COMMON_H
+#define __CONFIG_RV1103_COMMON_H
+
+#include "rockchip-common.h"
+
+#define CFG_IRAM_BASE			0x210f6000
+
+#ifndef CONFIG_SYS_ARCH_TIMER
+#define CFG_SYS_TIMER_RATE		(24 * 1000 * 1000)
+#define CFG_SYS_TIMER_BASE		0x20500000
+#define CFG_SYS_TIMER_COUNTER		(CFG_SYS_TIMER_BASE + 8)
+#endif
+
+#define CFG_SYS_SDRAM_BASE		0x00000000
+
+#define ENV_MEM_LAYOUT_SETTINGS \
+	"scriptaddr=0x00000000\0" \
+	"fdt_addr_r=0x01f00000\0" \
+	"kernel_addr_r=0x02000000\0" \
+	"ramdisk_addr_r=0x04000000\0"
+
+#include <config_distro_bootcmd.h>
+#define CFG_EXTRA_ENV_SETTINGS \
+	ENV_MEM_LAYOUT_SETTINGS \
+	"fdtfile=" CONFIG_DEFAULT_FDT_FILE "\0" \
+	"partitions=" PARTS_DEFAULT \
+	"boot_targets=" BOOT_TARGETS "\0"
+
+#endif
