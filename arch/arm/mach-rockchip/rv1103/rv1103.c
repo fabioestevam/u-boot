@@ -9,7 +9,6 @@
 #include <asm/io.h>
 #include <image.h>
 
-
 DECLARE_GLOBAL_DATA_PTR;
 
 #define PERI_CRU_BASE			0x20000000
@@ -81,7 +80,6 @@ void board_set_spi_nand(void)
 	/* FSPI0 M0 */
 	writel(0xffff2222, GPIO1_IOC_BASE + GPIO1A_IOMUX_SEL_0);
 	writel(0x00ff0022, GPIO1_IOC_BASE + GPIO1A_IOMUX_SEL_1_0);
-
 }
 
 #ifdef CONFIG_SPL_BUILD
@@ -98,30 +96,6 @@ void rockchip_stimer_init(void)
 	writel(0xffffffff, CONFIG_ROCKCHIP_STIMER_BASE + 0x18);
 	writel(0x00010001, CONFIG_ROCKCHIP_STIMER_BASE + 0x4);
 }
-
-int spl_fit_standalone_release(char *id, uintptr_t entry_point)
-{
-	if (!strcmp(id, "mcu0")) {
-		/* set the hpmcu boot address */
-		writel(entry_point, SGRF_SYS_BASE + SGRF_SYS_HPMCU_BOOT_DDR);
-	} else if (!strcmp(id, "mcu1")) {
-		/* reset lpmcu */
-		writel(0x000f000f, PMU0_CRU_BASE + PMUCRU_PMUSOFTRST_CON02);
-		/* set the lpmcu boot address */
-		writel(entry_point, SGRF_PMU_BASE + SGRF_PMU_PMUMCU_BOOT_ADDR);
-		writel(0x00800000, SGRF_PMU_BASE + SGRF_PMU_SOC_CON0);
-		/* release lpmcu */
-		writel(0x000f0000, PMU0_CRU_BASE + PMUCRU_PMUSOFTRST_CON02);
-	}
-
-	return 0;
-}
-
-void rk_meta_process(void)
-{
-	/* trigger software irq to hpmcu that means meta was ready */
-	writel(0x00080008, GRF_SYS_BASE + GRF_SYS_HPMCU_CACHE_MISC);
-}
 #endif
 
 #ifndef CONFIG_TPL_BUILD
@@ -130,7 +104,7 @@ int arch_cpu_init(void)
 	/* Stop any watchdog left running by BootROM/Boot1. */
 	writel(0, RV1103_WDT_BASE + RV1103_WDT_CR);
 
-#if defined(CONFIG_SPL_BUILD) || defined(CONFIG_SUPPORT_USBPLUG)
+#if defined(CONFIG_SPL_BUILD)
 	/* Set all devices to Non-secure */
 	writel(0xffff0000, SGRF_SYS_BASE + FIREWALL_CON0);
 	writel(0xffff0000, SGRF_SYS_BASE + FIREWALL_CON1);
@@ -164,39 +138,8 @@ int arch_cpu_init(void)
 	 */
 	writel(0x01ff01d1, SYS_GRF_BASE + GRF_SYS_USBPHY_CON0);
 	writel(0x00000000, USBPHY_APB_BASE + USBPHY_FSLS_DIFF_RECEIVER);
-
-#ifdef CONFIG_SPI_FLASH_AUTO_MERGE
-	/* gpio1a5/gpio2a6 cs-gpio */
-	writel(0x00F00000, GPIO1_IOC_BASE + GPIO1A_IOMUX_SEL_1_0);
-	writel(0x0F000000, GPIO2_IOC_BASE + GPIO2A_IOMUX_SEL_1_1);
-#endif
 #endif
 
 	return 0;
 }
-#endif
-
-#ifdef CONFIG_ROCKCHIP_IMAGE_TINY
-int rk_board_scan_bootdev(void)
-{
-	char *devtype, *devnum;
-
-	if (!run_command("blk dev mmc 1", 0) &&
-	    !run_command("rkimgtest mmc 1", 0)) {
-		devtype = "mmc";
-		devnum = "1";
-	} else {
-		run_command("blk dev mtd 2", 0);
-		devtype = "mtd";
-		devnum = "2";
-	}
-	env_set("devtype", devtype);
-	env_set("devnum", devnum);
-
-	return 0;
-}
-#endif
-
-#if defined(CONFIG_ROCKCHIP_EMMC_IOMUX) && defined(CONFIG_ROCKCHIP_SFC_IOMUX)
-#error FSPI and eMMC iomux is incompatible for rv1103b Soc. You should close one of them.
 #endif
