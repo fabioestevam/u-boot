@@ -1,14 +1,10 @@
 if ROCKCHIP_RV1103
 
-choice
-	prompt "RV1103 board select"
 
 config TARGET_OMEGA4_RV1103
 	bool "OMEGA4_RV1103"
 	help
 	  Support Onion's Omega4 RV1103 board.
-
-endchoice
 
 config ROCKCHIP_BOOT_MODE_REG
 	default 0x20160200
