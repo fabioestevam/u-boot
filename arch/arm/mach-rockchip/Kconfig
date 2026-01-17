@@ -489,7 +489,6 @@ config ROCKCHIP_RK3588
 
 config ROCKCHIP_RV1103
 	bool "Support Rockchip RV1103"
-	select ARM_ZERO_CNTVOFF
 	select CPU_V7A
 	select SPL_ARMV7_SET_CORTEX_SMPEN
 	select SUPPORT_SPL
