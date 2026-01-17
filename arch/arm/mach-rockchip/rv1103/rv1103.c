@@ -75,13 +75,6 @@ void board_debug_uart_init(void)
 	/* No need to change uart */
 }
 
-void board_set_spi_nand(void)
-{
-	/* FSPI0 M0 */
-	writel(0xffff2222, GPIO1_IOC_BASE + GPIO1A_IOMUX_SEL_0);
-	writel(0x00ff0022, GPIO1_IOC_BASE + GPIO1A_IOMUX_SEL_1_0);
-}
-
 #ifdef CONFIG_SPL_BUILD
 void rockchip_stimer_init(void)
 {
@@ -115,9 +108,6 @@ int arch_cpu_init(void)
 	writel(0x01f00000, SGRF_SYS_BASE + FIREWALL_CON7);
 	/* Set OTP to none secure mode */
 	writel(0x00020000, SGRF_SYS_BASE + SGRF_SYS_OTP_CON);
-
-	/* Set the fspi iomux */
-	board_set_spi_nand();
 
 	/* no-secure WDT reset output will reset SoC system. */
 	writel(0x00010001, SYS_GRF_BASE + GRF_SYS_PERI_CON2);
