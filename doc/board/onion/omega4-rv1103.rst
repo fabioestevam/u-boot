@@ -52,7 +52,7 @@ by following the instruction in the README file.
 .. code-block:: bash
 
    $ sudo ./rkdeveloptool db download.bin
-   $ sudo ./rkdeveloptool wl 0x200 idbloader-spi.img 
+   $ sudo ./rkdeveloptool wl 0x200 idbloader.img
    $ sudo ./rkdeveloptool wl 0xa00 u-boot.img
    
 Power cycle the board and U-Boot output is seen on the console.

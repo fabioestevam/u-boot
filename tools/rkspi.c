@@ -16,11 +16,6 @@ enum {
 	RKSPI_SECT_LEN		= RK_BLK_SIZE * 4,
 };
 
-static bool rkspi_skip_spread(const struct image_tool_params *params)
-{
-	return params->imagename && !strncmp(params->imagename, "rv1103", 6);
-}
-
 static void rkspi_set_header(void *buf, struct stat *sbuf, int ifd,
 			     struct image_tool_params *params)
 {
@@ -30,8 +25,6 @@ static void rkspi_set_header(void *buf, struct stat *sbuf, int ifd,
 	size = params->orig_file_size;
 
 	rkcommon_set_header(buf, sbuf, ifd, params);
-	if (rkspi_skip_spread(params))
-		return;
 
 	/*
 	 * Spread the image out so we only use the first 2KB of each 4KB
@@ -68,8 +61,6 @@ static int rkspi_vrec_header(struct image_tool_params *params,
 			     struct image_type_params *tparams)
 {
 	rkcommon_vrec_header(params, tparams);
-	if (rkspi_skip_spread(params))
-		return 0;
 
 	/*
 	 * Converting to the SPI format (i.e. splitting each 4K page into two
